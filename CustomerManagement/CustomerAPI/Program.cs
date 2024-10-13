@@ -4,6 +4,7 @@ using CustomerAPI.Services.Interfaces;
 using CustomerAPI.Services;
 using CustomerAPI.Mappings;
 using CustomerAPI.Exceptions.Middlewares;
+using CustomerAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ICustomerService, CustomerService>(); 
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddAutoMapper(typeof(MappingProfile)); 
+builder.Services.AddDependencies();
 
 var app = builder.Build();
 
