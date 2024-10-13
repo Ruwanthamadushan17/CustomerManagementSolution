@@ -8,19 +8,19 @@ namespace CustomerAPI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ICustomerService, CustomerService>();
             return services;
         }
 
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             return services;
         }
 
-        public static IServiceCollection AddAutoMapperProfiles(this IServiceCollection services)
+        private static IServiceCollection AddAutoMapperProfiles(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfile));
             return services;

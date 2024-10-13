@@ -19,7 +19,7 @@ builder.Services.AddDependencies();
 
 var app = builder.Build();
 
-app.UseMiddleware<GlobalExceptionHandler>();
+app.AddMiddlewares();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
