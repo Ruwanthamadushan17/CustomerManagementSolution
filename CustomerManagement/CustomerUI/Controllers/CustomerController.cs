@@ -27,7 +27,32 @@ namespace CustomerUI.Controllers
                 _logger.LogError(ex, $"Error loading customers.");
                 return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
-            
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CustomerViewModel customer)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _customerApiService.CreateAsync(customer);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error creating customer.");
+                    ModelState.AddModelError("", "Failed to create customer.");
+                }
+            }
+
+            return View(customer);
         }
     }
 }

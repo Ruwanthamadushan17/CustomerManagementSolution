@@ -1,4 +1,5 @@
-﻿using CustomerAPI.Services.Interfaces;
+﻿using CustomerAPI.DTOs;
+using CustomerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerAPI.Controllers
@@ -18,6 +19,13 @@ namespace CustomerAPI.Controllers
         public async Task<IActionResult> GetCustomers()
         {
             return Ok(await _customerService.GetAllAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCustomer(CustomerRequestDto customer)
+        {
+            await _customerService.AddAsync(customer);
+            return Ok();
         }
     }
 }

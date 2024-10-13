@@ -9,6 +9,7 @@ namespace CustomerAPI.Mappings
         public MappingProfile()
         {
             CreateMap<CustomerEnt, CustomerResponseDto>();
+            CreateMap<CustomerRequestDto, CustomerEnt>();
         }
     }
 }

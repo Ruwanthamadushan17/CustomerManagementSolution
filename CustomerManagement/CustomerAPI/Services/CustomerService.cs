@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CustomerAPI.DTOs;
+using CustomerAPI.Entities;
 using CustomerAPI.Repositories.Interfaces;
 using CustomerAPI.Services.Interfaces;
 
@@ -20,6 +21,12 @@ namespace CustomerAPI.Services
         {
             var customers = await _customerRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
+        }
+
+        public async Task AddAsync(CustomerRequestDto customerDto)
+        {
+            var customer = _mapper.Map<CustomerEnt>(customerDto);
+            await _customerRepository.AddAsync(customer);
         }
     }
 }

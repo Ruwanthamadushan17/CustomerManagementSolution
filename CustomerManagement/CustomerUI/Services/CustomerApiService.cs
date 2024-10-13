@@ -25,9 +25,23 @@ namespace CustomerUI.Services
                 return await response.Content.ReadFromJsonAsync<IEnumerable<CustomerViewModel>>()
                        ?? new List<CustomerViewModel>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error loading customers.");
+                throw;
+            }
+        }
 
+        public async Task CreateAsync(CustomerViewModel customer)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Customer", customer);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating new customer.");
                 throw;
             }
         }

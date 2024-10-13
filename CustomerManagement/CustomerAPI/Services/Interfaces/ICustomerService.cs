@@ -5,5 +5,6 @@ namespace CustomerAPI.Services.Interfaces
     public interface ICustomerService
     {
         Task<IEnumerable<CustomerResponseDto>> GetAllAsync();
+        Task AddAsync(CustomerRequestDto customerDto);
     }
 }

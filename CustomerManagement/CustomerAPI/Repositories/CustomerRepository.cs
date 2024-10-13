@@ -15,8 +15,16 @@ namespace CustomerAPI.Repositories
 
         public async Task<IEnumerable<CustomerEnt>> GetAllAsync()
         {
-            await Task.Delay(500);
+            await SimulateIODelay();
             return _customers.Where(c => !c.IsDeleted);
+        }
+
+        public async Task AddAsync(CustomerEnt customer)
+        {
+            await SimulateIODelay();
+            customer.Id = Guid.NewGuid();
+            customer.CreatedAt = DateTime.UtcNow;
+            _customers.Add(customer);
         }
 
         private void SeedData()
@@ -29,6 +37,11 @@ namespace CustomerAPI.Repositories
 
                 _isSeeded = true;
             }
+        }
+
+        private async Task SimulateIODelay()
+        {
+            await Task.Delay(500);
         }
     }
 }

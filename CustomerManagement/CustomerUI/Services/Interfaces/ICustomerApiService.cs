@@ -5,5 +5,6 @@ namespace CustomerUI.Services.Interfaces
     public interface ICustomerApiService
     {
         Task<IEnumerable<CustomerViewModel>> GetAllCustomersAsync();
+        Task CreateAsync(CustomerViewModel customer);
     }
 }
