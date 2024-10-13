@@ -6,5 +6,7 @@ namespace CustomerAPI.Services.Interfaces
     {
         Task<IEnumerable<CustomerResponseDto>> GetAllAsync();
         Task AddAsync(CustomerRequestDto customerDto);
+        Task<CustomerResponseDto> GetByIdAsync(Guid id);
+        Task UpdateAsync(Guid id, CustomerRequestDto customerDto);
     }
 }

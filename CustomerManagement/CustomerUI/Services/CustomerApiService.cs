@@ -45,5 +45,34 @@ namespace CustomerUI.Services
                 throw;
             }
         }
+
+        public async Task<CustomerViewModel> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/Customer/{id}");
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<CustomerViewModel>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error fetching customer with id {id}.");
+                throw;
+            }
+        }
+
+        public async Task UpdateAsync(Guid id, CustomerViewModel customer)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"api/Customer/{id}", customer);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating customer with id {id}.");
+                throw;
+            }
+        }
     }
 }

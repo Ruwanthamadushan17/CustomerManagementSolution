@@ -25,7 +25,7 @@ namespace CustomerUI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error loading customers.");
-                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                return View("Error", GetErrorViewModel());
             }
         }
 
@@ -53,6 +53,51 @@ namespace CustomerUI.Controllers
             }
 
             return View(customer);
+        }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            try
+            {
+                var customer = await _customerApiService.GetByIdAsync(id);
+                if (customer == null) return NotFound();
+
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error loading customer with id {id} for edit.");
+                return View("Error", GetErrorViewModel());
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, CustomerViewModel customer)
+        {
+            if (id != customer.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _customerApiService.UpdateAsync(id, customer);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error updating customer with id {id}.");
+                    ModelState.AddModelError("", "Failed to update customer.");
+                }
+            }
+
+            return View(customer);
+        }
+
+        private ErrorViewModel GetErrorViewModel()
+        {
+            return new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
         }
     }
 }

@@ -27,6 +27,26 @@ namespace CustomerAPI.Repositories
             _customers.Add(customer);
         }
 
+        public async Task<CustomerEnt> GetByIdAsync(Guid id)
+        {
+            await SimulateIODelay();
+            return _customers.FirstOrDefault(c => c.Id == id && !c.IsDeleted);
+        }
+
+        public async Task UpdateAsync(Guid id, CustomerEnt customer)
+        {
+            await SimulateIODelay();
+            var existing = _customers.FirstOrDefault(c => c.Id == customer.Id && !c.IsDeleted);
+
+            if (customer != null)
+            {
+                existing.Name = customer.Name;
+                existing.Email = customer.Email;
+                existing.Address = customer.Address;
+                existing.updatedAt = DateTime.UtcNow;
+            }
+        }
+
         private void SeedData()
         {
             // Seed initial data

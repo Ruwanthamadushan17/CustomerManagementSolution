@@ -27,5 +27,19 @@ namespace CustomerAPI.Controllers
             await _customerService.AddAsync(customer);
             return Ok();
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCustomer(Guid id)
+        {
+            var customer = await _customerService.GetByIdAsync(id);
+            return Ok(customer);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(Guid id, CustomerRequestDto customer)
+        {
+            await _customerService.UpdateAsync(id, customer);
+            return Ok();
+        }
     }
 }
