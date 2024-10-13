@@ -4,3 +4,4 @@
 - Adding Unit Tests
 - Caching
 - Used a List as the Data layer
+- Not having seperate projects for DTOs, Entities etc
