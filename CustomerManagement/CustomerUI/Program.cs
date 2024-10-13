@@ -1,15 +1,11 @@
-using CustomerUI.Services.Interfaces;
-using CustomerUI.Services;
+using CustomerUI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient<ICustomerApiService, CustomerApiService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7176/");
-});
+builder.Services.AddApiServices();
 
 var app = builder.Build();
 
