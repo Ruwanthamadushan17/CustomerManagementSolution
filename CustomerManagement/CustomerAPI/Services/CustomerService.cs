@@ -45,6 +45,12 @@ namespace CustomerAPI.Services
             await _customerRepository.UpdateAsync(id, updatedCustomer);
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            var customer = await GetCustomerOrThrowAsync(id, nameof(DeleteAsync));
+            await _customerRepository.DeleteAsync(id);
+        }
+
         private async Task<CustomerEnt> GetCustomerOrThrowAsync(Guid id, string method)
         {
             var customer = await _customerRepository.GetByIdAsync(id);

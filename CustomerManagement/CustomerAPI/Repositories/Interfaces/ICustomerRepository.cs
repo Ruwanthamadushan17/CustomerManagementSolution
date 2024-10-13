@@ -8,5 +8,6 @@ namespace CustomerAPI.Repositories.Interfaces
         Task AddAsync(CustomerEnt customer);
         Task<CustomerEnt> GetByIdAsync(Guid id);
         Task UpdateAsync(Guid id, CustomerEnt customer);
+        Task DeleteAsync(Guid id);
     }
 }

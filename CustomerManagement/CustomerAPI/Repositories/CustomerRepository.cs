@@ -47,6 +47,18 @@ namespace CustomerAPI.Repositories
             }
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            await SimulateIODelay();
+
+            var customer = _customers.FirstOrDefault(c => c.Id == id && !c.IsDeleted);
+
+            if (customer != null)
+            {
+                customer.IsDeleted = true;
+            }
+        }
+
         private void SeedData()
         {
             // Seed initial data

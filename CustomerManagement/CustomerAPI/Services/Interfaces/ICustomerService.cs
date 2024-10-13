@@ -8,5 +8,6 @@ namespace CustomerAPI.Services.Interfaces
         Task AddAsync(CustomerRequestDto customerDto);
         Task<CustomerResponseDto> GetByIdAsync(Guid id);
         Task UpdateAsync(Guid id, CustomerRequestDto customerDto);
+        Task DeleteAsync(Guid id);
     }
 }

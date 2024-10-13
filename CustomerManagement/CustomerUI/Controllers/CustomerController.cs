@@ -95,6 +95,38 @@ namespace CustomerUI.Controllers
             return View(customer);
         }
 
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var customer = await _customerApiService.GetByIdAsync(id);
+                if (customer == null) return NotFound();
+
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error loading customer with id {id} for deletion.");
+                return View("Error", GetErrorViewModel());
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                await _customerApiService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting customer with id {id}.");
+                return View("Error", GetErrorViewModel());
+            }
+        }
+
         private ErrorViewModel GetErrorViewModel()
         {
             return new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };

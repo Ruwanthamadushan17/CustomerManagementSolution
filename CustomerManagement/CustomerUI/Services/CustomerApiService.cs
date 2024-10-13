@@ -74,5 +74,19 @@ namespace CustomerUI.Services
                 throw;
             }
         }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/Customer/{id}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting customer with id {id}.");
+                throw;
+            }
+        }
     }
 }

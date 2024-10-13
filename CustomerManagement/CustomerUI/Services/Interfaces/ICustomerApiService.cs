@@ -8,5 +8,6 @@ namespace CustomerUI.Services.Interfaces
         Task CreateAsync(CustomerViewModel customer);
         Task<CustomerViewModel> GetByIdAsync(Guid id);
         Task UpdateAsync(Guid id, CustomerViewModel customer);
+        Task DeleteAsync(Guid id);
     }
 }
