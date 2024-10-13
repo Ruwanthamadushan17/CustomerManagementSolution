@@ -3,6 +3,7 @@ using CustomerAPI.Repositories;
 using CustomerAPI.Services.Interfaces;
 using CustomerAPI.Services;
 using CustomerAPI.Mappings;
+using CustomerAPI.Exceptions.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddAutoMapper(typeof(MappingProfile)); 
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionHandler>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -56,7 +56,7 @@ namespace CustomerAPI.Services
             var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)
             {
-                _logger.LogWarning($"{method} failed, Customer with ID {id} not found.");
+                _logger.LogError($"{method} failed, Customer with ID {id} not found.");
                 throw new CustomerNotFoundException($"{method} failed, Customer with ID {id} not found.");
             }
             return customer;
