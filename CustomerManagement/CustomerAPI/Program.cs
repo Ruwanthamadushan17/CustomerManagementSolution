@@ -5,6 +5,8 @@ using CustomerAPI.Services;
 using CustomerAPI.Mappings;
 using CustomerAPI.Exceptions.Middlewares;
 using CustomerAPI.Extensions;
+using CustomerAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDependencies();
+
+builder.Services.AddDbContext<CustomerDbContext>(options =>
+    options.UseInMemoryDatabase("CustomerDb"));
 
 var app = builder.Build();
 

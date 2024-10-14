@@ -6,7 +6,7 @@ namespace CustomerAPI.Repositories.Interfaces
     {
         Task<IEnumerable<CustomerEnt>> GetAllAsync();
         Task AddAsync(CustomerEnt customer);
-        Task<CustomerEnt> GetByIdAsync(Guid id);
+        Task<CustomerEnt?> GetByIdAsync(Guid id);
         Task UpdateAsync(Guid id, CustomerEnt customer);
         Task DeleteAsync(Guid id);
     }

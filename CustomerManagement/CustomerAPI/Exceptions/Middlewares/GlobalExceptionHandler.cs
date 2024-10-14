@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Net;
 using System.Text.Json;
 
 namespace CustomerAPI.Exceptions.Middlewares
@@ -37,7 +38,31 @@ namespace CustomerAPI.Exceptions.Middlewares
             };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            if (exception is DbUpdateException)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
+                response = new
+                {
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    Message = "A database update error occurred during the transaction.",
+                    Detailed = exception.Message
+                };
+            }
+            else if (exception is DbUpdateConcurrencyException)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                response = new
+                {
+                    StatusCode = (int)HttpStatusCode.Conflict,
+                    Message = "A concurrency conflict occurred while processing the request.",
+                    Detailed = exception.Message
+                };
+            }
+            else
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
 
             var jsonResponse = JsonSerializer.Serialize(response);
 
