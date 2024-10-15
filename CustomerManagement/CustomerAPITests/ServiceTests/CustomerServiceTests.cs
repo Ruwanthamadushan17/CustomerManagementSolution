@@ -38,8 +38,8 @@ namespace CustomerAPITests.ServiceTests
 
             var customers = new List<CustomerEnt>
             {
-                new CustomerEnt { Id = Guid.NewGuid(), Name = "Test User1" },
-                new CustomerEnt { Id = Guid.NewGuid(), Name = "Test User2" }
+                new CustomerEnt { Id = Guid.NewGuid(), FirstName = "Test User1" },
+                new CustomerEnt { Id = Guid.NewGuid(), FirstName = "Test User2" }
             };
             _customerRepositoryMock.Setup(repo => repo.GetAllAsync(filterOptions))
                 .ReturnsAsync(customers);
@@ -58,8 +58,8 @@ namespace CustomerAPITests.ServiceTests
         public async Task AddAsync_ShouldCallRepositoryAddMethod()
         {
             // Arrange
-            var customerDto = new CustomerRequestDto { Name = "Test User1", Address = "Test Address" };
-            var customerEntity = new CustomerEnt { Id = Guid.NewGuid(), Name = "Test User1", Address = "Test Address" };
+            var customerDto = new CustomerRequestDto { FirstName = "Test User1", Address = "Test Address" };
+            var customerEntity = new CustomerEnt { Id = Guid.NewGuid(), FirstName = "Test User1", Address = "Test Address" };
 
             _mapperMock.Setup(m => m.Map<CustomerEnt>(customerDto))
                 .Returns(customerEntity);
@@ -76,7 +76,7 @@ namespace CustomerAPITests.ServiceTests
         {
             // Arrange
             var customerId = Guid.NewGuid();
-            var customerEntity = new CustomerEnt { Id = customerId, Name = "Test User1" };
+            var customerEntity = new CustomerEnt { Id = customerId, FirstName = "Test User1" };
             _customerRepositoryMock.Setup(repo => repo.GetByIdAsync(customerId))
                 .ReturnsAsync(customerEntity);
             _mapperMock.Setup(m => m.Map<CustomerResponseDto>(customerEntity))
@@ -108,12 +108,12 @@ namespace CustomerAPITests.ServiceTests
         {
             // Arrange
             var customerId = Guid.NewGuid();
-            var customerDto = new CustomerRequestDto { Name = "Test User1", Address = "Test Address" };
-            var customerEntity = new CustomerEnt { Id = customerId, Name = "Test User1", Address = "Test Address" };
+            var customerDto = new CustomerRequestDto { FirstName = "Test User1", Address = "Test Address" };
+            var customerEntity = new CustomerEnt { Id = customerId, FirstName = "Test User1", Address = "Test Address" };
             _customerRepositoryMock.Setup(repo => repo.GetByIdAsync(customerId))
                 .ReturnsAsync(customerEntity);
             _mapperMock.Setup(m => m.Map<CustomerEnt>(customerDto))
-                .Returns(new CustomerEnt { Id = customerId, Name = "Test User1", Address = "Test Address" });
+                .Returns(new CustomerEnt { Id = customerId, FirstName = "Test User1", Address = "Test Address" });
 
             // Act
             await _customerService.UpdateAsync(customerId, customerDto);
@@ -127,7 +127,7 @@ namespace CustomerAPITests.ServiceTests
         {
             // Arrange
             var customerId = Guid.NewGuid();
-            var customerDto = new CustomerRequestDto { Name = "Test User1", Address = "Test Address" };
+            var customerDto = new CustomerRequestDto { FirstName = "Test User1", Address = "Test Address" };
             _customerRepositoryMock.Setup(repo => repo.GetByIdAsync(customerId))
                 .ReturnsAsync((CustomerEnt?)null);
 
@@ -142,7 +142,7 @@ namespace CustomerAPITests.ServiceTests
         {
             // Arrange
             var customerId = Guid.NewGuid();
-            var customerEntity = new CustomerEnt { Id = customerId, Name = "Test User1" };
+            var customerEntity = new CustomerEnt { Id = customerId, FirstName = "Test User1" };
             _customerRepositoryMock.Setup(repo => repo.GetByIdAsync(customerId))
                 .ReturnsAsync(customerEntity);
 

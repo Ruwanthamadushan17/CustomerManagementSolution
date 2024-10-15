@@ -137,7 +137,7 @@ namespace CustomerAPITests.ControllerTests
         private CustomerRequestDto GetCustomerResquetDto()
         {
             return _fixture.Build<CustomerRequestDto>()
-                                        .With(o => o.Name, "Test User")
+                                        .With(o => o.FirstName, "Test User")
                                         .With(o => o.Address, "Test Address")
                                         .With(o => o.Email, "test@test.com")
                                         .Create();
@@ -146,7 +146,7 @@ namespace CustomerAPITests.ControllerTests
         private CustomerResponseDto GetCustomerResponseDto()
         {
             return _fixture.Build<CustomerResponseDto>()
-                                        .With(o => o.Name, "Test User")
+                                        .With(o => o.FirstName, "Test User")
                                         .With(o => o.Address, "Test Address")
                                         .With(o => o.Email, "test@test.com")
                                         .Create();

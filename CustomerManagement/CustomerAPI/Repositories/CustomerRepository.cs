@@ -22,8 +22,11 @@ namespace CustomerAPI.Repositories
                             .Select(c => new CustomerEnt
                             {
                                 Id = c.Id,
-                                Name = c.Name,
-                                Email = c.Email
+                                FirstName = c.FirstName,
+                                LastName = c.LastName,
+                                Email = c.Email,
+                                Address = c.Address,
+                                MobileNo = c.MobileNo,
                             })
                             .OrderBy(c => c.Id)
                             .AsNoTracking();
@@ -43,23 +46,10 @@ namespace CustomerAPI.Repositories
 
         public async Task AddAsync(CustomerEnt customer)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    customer.Id = Guid.NewGuid();
-                    customer.CreatedAt = DateTime.UtcNow;
-                    await _context.Customers.AddAsync(customer);
-                    await _context.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
-            }
+            customer.Id = Guid.NewGuid();
+            customer.CreatedAt = DateTime.UtcNow;
+            await _context.Customers.AddAsync(customer);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<CustomerEnt?> GetByIdAsync(Guid id)
@@ -68,60 +58,39 @@ namespace CustomerAPI.Repositories
                             .Select(c => new CustomerEnt
                             {
                                 Id = c.Id,
-                                Name = c.Name,
-                                Email = c.Email
+                                FirstName = c.FirstName,
+                                LastName = c.LastName,
+                                Email = c.Email,
+                                Address = c.Address,
+                                MobileNo = c.MobileNo
                             })
                             .FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Guid id, CustomerEnt customer)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var existing = await _context.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id && !c.IsDeleted);
+
+            if (customer != null)
             {
-                try
-                {
-                    var existing = await _context.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id && !c.IsDeleted);
-
-                    if (customer != null)
-                    {
-                        existing.Name = customer.Name;
-                        existing.Email = customer.Email;
-                        existing.Address = customer.Address;
-                        existing.updatedAt = DateTime.UtcNow;
-                        await _context.SaveChangesAsync();
-
-                        await transaction.CommitAsync();
-                    }
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                existing.FirstName = customer.FirstName;
+                existing.LastName = customer.LastName;
+                existing.Email = customer.Email;
+                existing.Address = customer.Address;
+                existing.MobileNo = customer.MobileNo;
+                existing.updatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+
+            if (customer != null)
             {
-                try
-                {
-                    var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
-
-                    if (customer != null)
-                    {
-                        customer.IsDeleted = true;
-                        await _context.SaveChangesAsync();
-
-                        await transaction.CommitAsync();
-                    }
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                customer.IsDeleted = true;
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -131,8 +100,8 @@ namespace CustomerAPI.Repositories
             if (!_context.Customers.Any())
             {
                 _context.Customers.AddRange(new[] {
-                    new CustomerEnt { Id = Guid.NewGuid(), Name = "User One", Email = "user1@example.com", Address = "1 street1 city1", IsDeleted = false, CreatedAt = DateTime.UtcNow },
-                    new CustomerEnt { Id = Guid.NewGuid(), Name = "User Two", Email = "user2@example.com", Address = "2 street2 city2", IsDeleted = false, CreatedAt = DateTime.UtcNow }
+                    new CustomerEnt { Id = Guid.NewGuid(), FirstName = "User1", LastName = "Last1", Email = "user1@example.com", Address = "1 street1 city1", MobileNo = "+440012345678", IsDeleted = false, CreatedAt = DateTime.UtcNow },
+                    new CustomerEnt { Id = Guid.NewGuid(), FirstName = "User2", LastName = "Last2", Email = "user2@example.com", Address = "2 street2 city2", MobileNo = "+441112345678", IsDeleted = false, CreatedAt = DateTime.UtcNow }
                 });
                 _context.SaveChanges();
             }

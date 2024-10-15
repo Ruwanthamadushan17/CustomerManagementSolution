@@ -30,9 +30,9 @@ namespace CustomerAPITests.RepositoryTests
         {
 
             var customers = new List<CustomerEnt> {
-                new CustomerEnt { Id = Guid.Parse("77b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), Name = "Test User1", Email = "test@test1.com", Address = "1 Test Address", IsDeleted = false },
-                new CustomerEnt { Id = Guid.Parse("88b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), Name = "Test User2", Email = "test@test2.com", Address = "2 Test Address", IsDeleted = false },
-                new CustomerEnt { Id = Guid.Parse("99b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), Name = "Test User3", Email = "test@test3.com", Address = "3 Test Address", IsDeleted = false }
+                new CustomerEnt { Id = Guid.Parse("77b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), FirstName = "Test User1", Email = "test@test1.com", Address = "1 Test Address", IsDeleted = false },
+                new CustomerEnt { Id = Guid.Parse("88b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), FirstName = "Test User2", Email = "test@test2.com", Address = "2 Test Address", IsDeleted = false },
+                new CustomerEnt { Id = Guid.Parse("99b1e4d8-a2a3-44b2-a54b-ecf41304d0ff"), FirstName = "Test User3", Email = "test@test3.com", Address = "3 Test Address", IsDeleted = false }
             };
             return customers;
         }
