@@ -1,4 +1,5 @@
 ﻿using CustomerAPI.Data;
+using CustomerAPI.DTOs;
 using CustomerAPI.Entities;
 using CustomerAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,29 @@ namespace CustomerAPI.Repositories
             SeedData();
         }
 
-        public async Task<IEnumerable<CustomerEnt>> GetAllAsync()
+        public async Task<IEnumerable<CustomerEnt>> GetAllAsync(GetRequestFilterOptions filterOptions)
         {
-            return await _context.Customers.Where(c => !c.IsDeleted).ToListAsync();
+            var query = _context.Customers.Where(c => !c.IsDeleted)
+                            .Select(c => new CustomerEnt
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Email = c.Email
+                            })
+                            .OrderBy(c => c.Id)
+                            .AsNoTracking();
+
+            if (filterOptions?.Skip.HasValue == true)
+            {
+                query = query.Skip(filterOptions.Skip.Value);
+            }
+
+            if (filterOptions?.Take.HasValue == true)
+            {
+                query = query.Take(filterOptions.Take.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task AddAsync(CustomerEnt customer)
@@ -43,7 +64,14 @@ namespace CustomerAPI.Repositories
 
         public async Task<CustomerEnt?> GetByIdAsync(Guid id)
         {
-            return await _context.Customers.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+            return await _context.Customers.Where(c => c.Id == id && !c.IsDeleted)
+                            .Select(c => new CustomerEnt
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Email = c.Email
+                            })
+                            .FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Guid id, CustomerEnt customer)

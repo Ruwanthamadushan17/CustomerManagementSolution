@@ -2,6 +2,7 @@
 using CustomerUI.Models;
 using CustomerUI.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 
@@ -20,11 +21,13 @@ namespace CustomerUI.Services
             _apiSettings = apiSettings.Value;
         }
 
-        public async Task<IEnumerable<CustomerViewModel>> GetAllCustomersAsync()
+        public async Task<IEnumerable<CustomerViewModel>> GetAllCustomersAsync(int? skip, int? take)
         {
             try
             {
-                var response = await _httpClient.GetAsync(_apiSettings.CustomerEndpoint);
+                var queryParameters = BuildQueryParameters(skip, take);
+                
+                var response = await _httpClient.GetAsync(_apiSettings.CustomerEndpoint + queryParameters);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadFromJsonAsync<IEnumerable<CustomerViewModel>>()
                        ?? new List<CustomerViewModel>();
@@ -91,6 +94,23 @@ namespace CustomerUI.Services
                 _logger.LogError(ex, $"Error deleting customer with id {id}.");
                 throw;
             }
+        }
+
+        private string BuildQueryParameters(int? skip, int? take)
+        {
+            var queryParams = new List<string>();
+
+            if (skip.HasValue)
+            {
+                queryParams.Add($"skip={skip.Value}");
+            }
+
+            if (take.HasValue)
+            {
+                queryParams.Add($"take={take.Value}");
+            }
+
+            return queryParams.Count > 0 ? "?" + string.Join("&", queryParams) : string.Empty;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using CustomerAPI.Repositories;
+﻿using AutoFixture;
+using CustomerAPI.DTOs;
+using CustomerAPI.Repositories;
 
 namespace CustomerAPITests.RepositoryTests
 {
@@ -6,17 +8,24 @@ namespace CustomerAPITests.RepositoryTests
     {
         DatabaseFixture _databaseFixture;
         private readonly CustomerRepository _customerRepository;
+        private readonly Fixture _fixture;
 
         public CustomerRepositoryTests(DatabaseFixture databaseFixture)
         {
             _databaseFixture = databaseFixture;
             _customerRepository = new CustomerRepository(_databaseFixture._dbContext);
+            _fixture = new Fixture();
         }
 
         [Fact]
         public void GetAllAsync_Returns_AllCustomers()
         {
-            var response = _customerRepository.GetAllAsync();
+            var filterOptions = _fixture.Build<GetRequestFilterOptions>()
+                                        .With(o => o.Take, 10)
+                                        .With(o => o.Skip, 0)
+                                        .Create();
+
+            var response = _customerRepository.GetAllAsync(filterOptions);
 
             Assert.NotNull(response);
             Assert.True(response.Result.Count() > 0);

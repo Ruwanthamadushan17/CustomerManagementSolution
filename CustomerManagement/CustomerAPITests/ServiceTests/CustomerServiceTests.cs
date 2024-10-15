@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using CustomerAPI.DTOs;
 using CustomerAPI.Entities;
 using CustomerAPI.Exceptions;
@@ -15,6 +16,7 @@ namespace CustomerAPITests.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILogger<CustomerService>> _loggerMock;
         private readonly CustomerService _customerService;
+        private readonly Fixture _fixture;
 
         public CustomerServiceTests()
         {
@@ -22,24 +24,30 @@ namespace CustomerAPITests.ServiceTests
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<CustomerService>>();
             _customerService = new CustomerService(_customerRepositoryMock.Object, _mapperMock.Object, _loggerMock.Object);
+            _fixture = new Fixture();
         }
 
         [Fact]
         public async Task GetAllAsync_ShouldReturnListOfCustomers()
         {
             // Arrange
+            var filterOptions = _fixture.Build<GetRequestFilterOptions>()
+                                        .With(o => o.Take, 10)
+                                        .With(o => o.Skip, 0)
+                                        .Create();
+
             var customers = new List<CustomerEnt>
             {
                 new CustomerEnt { Id = Guid.NewGuid(), Name = "Test User1" },
                 new CustomerEnt { Id = Guid.NewGuid(), Name = "Test User2" }
             };
-            _customerRepositoryMock.Setup(repo => repo.GetAllAsync())
+            _customerRepositoryMock.Setup(repo => repo.GetAllAsync(filterOptions))
                 .ReturnsAsync(customers);
             _mapperMock.Setup(m => m.Map<IEnumerable<CustomerResponseDto>>(It.IsAny<IEnumerable<CustomerEnt>>()))
                 .Returns(new List<CustomerResponseDto> { new CustomerResponseDto(), new CustomerResponseDto() });
 
             // Act
-            var result = await _customerService.GetAllAsync();
+            var result = await _customerService.GetAllAsync(filterOptions);
 
             // Assert
             Assert.NotNull(result);

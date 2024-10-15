@@ -17,6 +17,12 @@
             <th>Address</th>
             <th>Actions</th>
         </tr>
+        <tr>
+            <div>
+                <a asp-action="Index" asp-route-skip="0" asp-route-take="10">First 10</a>
+                <a asp-action="Index" asp-route-skip="10" asp-route-take="10">Next 10</a>
+            </div>
+        </tr>
     </thead>
     <tbody>
         @foreach (var customer in Model)
@@ -31,5 +37,6 @@
                 </td>
             </tr>
         }
+        
     </tbody>
 </table>

@@ -4,6 +4,7 @@ using CustomerAPI.Exceptions;
 using CustomerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using AutoFixture;
 
 namespace CustomerAPITests.ControllerTests
 {
@@ -11,33 +12,40 @@ namespace CustomerAPITests.ControllerTests
     {
         private readonly Mock<ICustomerService> _customerServiceMock;
         private readonly CustomerController _customerController;
+        private readonly Fixture _fixture;
 
         public CustomerControllerTests()
         {
             _customerServiceMock = new Mock<ICustomerService>();
             _customerController = new CustomerController(_customerServiceMock.Object);
+            _fixture = new Fixture();
         }
 
         [Fact]
         public async Task GetCustomers_ShouldReturnOk_WhenCustomersExist()
         {
             // Arrange
+            var filterOptions = _fixture.Build<GetRequestFilterOptions>()
+                                        .With(o => o.Take, 10)
+                                        .With(o => o.Skip, 0)
+                                        .Create();
+
             var customers = new List<CustomerResponseDto>
             {
                 GetCustomerResponseDto()
             };
 
-            _customerServiceMock.Setup(service => service.GetAllAsync())
+            _customerServiceMock.Setup(service => service.GetAllAsync(filterOptions))
                 .ReturnsAsync(customers);
 
             // Act
-            var result = await _customerController.GetCustomers();
+            var result = await _customerController.GetCustomers(filterOptions);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedCustomers = Assert.IsType<List<CustomerResponseDto>>(okResult.Value);
             Assert.Single(returnedCustomers);
-            _customerServiceMock.Verify(x => x.GetAllAsync(), Times.Once);
+            _customerServiceMock.Verify(x => x.GetAllAsync(filterOptions), Times.Once);
         }
 
         [Fact]
@@ -127,13 +135,21 @@ namespace CustomerAPITests.ControllerTests
         }
 
         private CustomerRequestDto GetCustomerResquetDto()
-        { 
-            return new CustomerRequestDto { Name = "Test User", Address = "Test Address", Email = "Test@test.com" };
+        {
+            return _fixture.Build<CustomerRequestDto>()
+                                        .With(o => o.Name, "Test User")
+                                        .With(o => o.Address, "Test Address")
+                                        .With(o => o.Email, "test@test.com")
+                                        .Create();
         }
 
         private CustomerResponseDto GetCustomerResponseDto()
         {
-            return new CustomerResponseDto { Name = "Test User", Address = "Test Address", Email = "Test@test.com" };
+            return _fixture.Build<CustomerResponseDto>()
+                                        .With(o => o.Name, "Test User")
+                                        .With(o => o.Address, "Test Address")
+                                        .With(o => o.Email, "test@test.com")
+                                        .Create();
         }
     }
 }

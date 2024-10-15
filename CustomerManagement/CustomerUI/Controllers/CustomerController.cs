@@ -15,11 +15,11 @@ namespace CustomerUI.Controllers
             _customerApiService = customerService;
             _logger = logger;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? skip, int? take)
         {
             try
             {
-                var customers = await _customerApiService.GetAllCustomersAsync();
+                var customers = await _customerApiService.GetAllCustomersAsync(skip, take);
                 return View(customers);
             }
             catch (Exception ex)

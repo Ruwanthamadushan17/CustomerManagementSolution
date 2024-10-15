@@ -20,9 +20,9 @@ namespace CustomerAPI.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<CustomerResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<CustomerResponseDto>> GetAllAsync(GetRequestFilterOptions filterOptions)
         {
-            var customers = await _customerRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync(filterOptions);
             return _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
         }
 

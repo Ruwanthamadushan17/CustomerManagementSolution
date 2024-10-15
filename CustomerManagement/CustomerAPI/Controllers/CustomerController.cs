@@ -16,9 +16,9 @@ namespace CustomerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCustomers()
+        public async Task<IActionResult> GetCustomers([FromQuery] GetRequestFilterOptions filterOptions)
         {
-            return Ok(await _customerService.GetAllAsync());
+            return Ok(await _customerService.GetAllAsync(filterOptions));
         }
 
         [HttpPost]
