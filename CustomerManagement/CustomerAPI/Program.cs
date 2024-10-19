@@ -19,6 +19,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDependencies();
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddDbContext<CustomerDbContext>(options =>
     options.UseInMemoryDatabase("CustomerDb"));
 
